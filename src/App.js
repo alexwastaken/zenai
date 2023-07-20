@@ -4,6 +4,7 @@ import Landing from './pages/Landing.js'
 import Home from './pages/Home.js'
 import Post from './pages/Post.js'
 import Test from './pages/test.js'
+import Prompt from './pages/Prompt.js'
 
 import { Route, Routes } from 'react-router-dom';
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/post" element={<Post />} />
       <Route path="/test" element={<Test />} />
+      <Route path="/prompt" element={<Prompt />} />
     </Routes>
 
   );

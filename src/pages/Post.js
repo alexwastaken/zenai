@@ -12,6 +12,16 @@ function Post() {
   const [description, setDescription] = useState('')
   const { user } = useAuth0()
 
+  const [image, setImage] = useState([]);
+
+  const handleImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const newImages = [...image];
+      newImages.push(URL.createObjectURL(event.target.files[0]))
+      setImage(newImages);
+    }
+  };
+
   return (
     <div>
       <div
@@ -59,15 +69,96 @@ function Post() {
             </div>
             <div className='flex-1 h-60 text-center'>
                 <label className="font-medium text-gray-900 dark:text-white">Upload</label>
-              <div className='grid grid-cols-2 mt-16 gap-y-3'>
-                <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
-                <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
-                <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
-                <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
-              </div>
-              <img src={submit} className='cursor-pointer block md:hidden mt-32 mx-auto w-[60px]' alt="ImageBottom" />
-            </div>
-
+                <div className='grid grid-cols-2 mt-16 gap-y-3'>
+                  <input
+                    type='file'
+                    accept='image/*'
+                    onChange={handleImageChange}
+                    className='hidden'
+                    id='image-input'
+                  />
+                  {image.length === 0 && (
+                    <>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                    </>
+                  )}
+                  {image.length === 1 && (
+                    <>
+                      <label htmlFor='image-input'>
+                        <img src={image[0]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                    </>
+                  )}
+                  {image.length === 2 && (
+                    <>
+                      <label htmlFor='image-input'>
+                        <img src={image[0]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img src={image[1]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                    </>
+                  )}
+                  {image.length === 3 && (
+                    <>
+                      <label htmlFor='image-input'>
+                        <img src={image[0]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img src={image[1]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img src={image[2]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
+                      </label>
+                    </>
+                  )}
+                  {image.length === 4 && (
+                    <>
+                      <label htmlFor='image-input'>
+                        <img src={image[0]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img src={image[1]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img src={image[2]} alt='Uploaded' />
+                      </label>
+                      <label htmlFor='image-input'>
+                        <img src={image[3]} alt='Uploaded' />
+                      </label>
+                    </>
+                  )}
+                </div>
+                </div>
           </div>
         </section>
 
