@@ -33,9 +33,24 @@ app.post('/mypost', async (req, res) => {
   }
 })
 
-app.get('/myget', (req, res) => {
-  // Handle GET request to /my-endpoint
-  res.send('Hello from /my-endpoint!')
+app.get('/users', async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      take: 10,
+      orderBy: {
+        id: 'desc',
+      },
+      select: {
+        title: true,
+        description: true,
+        userId: true,
+      },
+    })
+
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 })
 
 // Start server

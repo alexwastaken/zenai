@@ -65,13 +65,7 @@ function Post() {
                 <img className='justify-self-end mr-5 cursor-pointer' src={plus} alt="ImageBottom" />
                 <img className='justify-self-start ml-6 cursor-pointer' src={plus} alt="ImageBottom" />
               </div>
-              {isAuthenticated ? (
-                <Link to="/post">
-                    <img src={submit} className='cursor-pointer block md:hidden mt-32 mx-auto w-[60px]' alt="ImageBottom" />
-                </Link>
-                ) : (
-                // Show login button or message
-                )}
+              <img src={submit} className='cursor-pointer block md:hidden mt-32 mx-auto w-[60px]' alt="ImageBottom" />
             </div>
 
           </div>
