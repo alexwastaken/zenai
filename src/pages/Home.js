@@ -2,7 +2,8 @@ import React from 'react'
 import backgroundhome from '../img/backgroundhome.png'
 import logo from '../img/Vector.png'
 import plug from '../img/plus.png'
-import { Link } from 'react-router-dom'; 
+import Header from '../components/header.js'
+import { Link } from 'react-router-dom'
 
 
 function Home() {
@@ -11,15 +12,8 @@ function Home() {
       className="h-screen bg-no-repeat bg-fixed bg-center bg-cover"
       style={{ backgroundImage: `url(${backgroundhome})` }}
     >
-    <header className="flex justify-between py-4 mx-auto max-w-4xl text-white font-sans tracking-wide">
-      <img src={logo} />
-        <div className="flex justify-center gap-28 text-lg">
-            <div>Profile</div>
-            <div>Favorites</div>
-            <div>My Books</div>
-        </div>
-        <div className='text-lg'>Sign In</div>
-    </header>
+    
+    <Header />
 
     <section className='mx-auto max-w-6xl'>
         <h1 className='text-center text-white text-3xl pt-20 pb-14'>All Books</h1>
