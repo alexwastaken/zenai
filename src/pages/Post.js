@@ -13,14 +13,32 @@ function Post() {
   const { user } = useAuth0()
 
   const [image, setImage] = useState([]);
+  const [binary, setBinary] = useState([]);
 
-  const handleImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
+  const handleImageChange = async (event) => {
+    if (event.target.files) {
       const newImages = [...image];
-      newImages.push(URL.createObjectURL(event.target.files[0]))
+      newImages.push(event.target.files[0]);
       setImage(newImages);
+  
+      const base64Image = await convertToBase64(event.target.files[0]);
+      setBinary((prevBinary) => [...prevBinary, base64Image]);
     }
   };
+
+  function convertToBase64(file){
+    return new Promise((resolve, reject) =>
+      {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+          resolve(fileReader.result)
+        };
+        fileReader.onerror = (error) => {
+          reject(error)
+        }
+      })
+  }
 
   return (
     <div>
@@ -45,6 +63,7 @@ function Post() {
                 className='hidden md:block mt-32 mx-auto w-[60px] cursor-pointer'
                 alt="ImageBottom"
                 onClick={() => {
+                    console.log(binary)
                     fetch('http://localhost:3001/mypost', {
                     method: 'POST',
                     headers: {
@@ -53,7 +72,8 @@ function Post() {
                     body: JSON.stringify({
                         title,
                         description,
-                        userId: user.name
+                        userId: user.name,
+                        imageFile: binary
                     })
                     })
                     .then(response => {

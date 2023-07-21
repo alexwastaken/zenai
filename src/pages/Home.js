@@ -15,10 +15,13 @@ function Home() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-    fetch('http://localhost:3001/users')
-        .then(response => response.json())
-        .then(data => setData(data));
-    }, []);
+        fetch('http://localhost:3001/users')
+          .then(response => response.json())
+          .then(data => setData(data))
+          .catch(error => console.error('An error occurred:', error));
+      }, []);
+
+    console.log(data)
 
   return (
     <div
@@ -42,6 +45,7 @@ function Home() {
             >
             <div>{item.title}</div>
             <div>{item.description}</div>
+            <Link to={`/prompt/${item.id}`}><img src={item.imageFile} alt={item.title} /></Link>
             </div>
         ))}
         <div className="w-full flex items-center justify-center">

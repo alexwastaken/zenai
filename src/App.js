@@ -14,7 +14,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/post" element={<Post />} />
       <Route path="/test" element={<Test />} />
-      <Route path="/prompt" element={<Prompt />} />
+      <Route path="/prompt/:id" element={<Prompt />} />
     </Routes>
 
   );

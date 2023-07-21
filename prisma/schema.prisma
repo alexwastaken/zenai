@@ -12,4 +12,5 @@ model User {
   title       String?
   description String?
   userId      String?
+  imageFile   String[]
 }
