@@ -5,6 +5,7 @@ import logo from '../img/Vector.png'
 import submit from '../img/submit.png'
 import Header from '../components/header.js'
 import { useAuth0 } from '@auth0/auth0-react'
+import Resizer from "react-image-file-resizer";
 
 function Post() {
 
@@ -15,6 +16,22 @@ function Post() {
   const [image, setImage] = useState([]);
   const [binary, setBinary] = useState([]);
 
+  const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      300,
+      300,
+      "JPEG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "base64"
+    );
+  });
+
   const handleImageChange = async (event) => {
     if (event.target.files) {
       const newImages = [...image];
@@ -22,7 +39,8 @@ function Post() {
       setImage(newImages);
   
       const base64Image = await convertToBase64(event.target.files[0]);
-      setBinary((prevBinary) => [...prevBinary, base64Image]);
+      const image = await resizeFile(base64Image);
+      setBinary((prevBinary) => [...prevBinary, image]);
     }
   };
 
