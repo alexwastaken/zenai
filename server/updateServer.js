@@ -41,7 +41,7 @@ app.post('/mypost', async (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      take: 10,
+      take: 18,
       orderBy: {
         id: 'desc',
       },

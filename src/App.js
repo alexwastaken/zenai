@@ -10,8 +10,8 @@ import { Route, Routes } from 'react-router-dom';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/landing" element={<Landing />} />
+      <Route path="/" element={<Home />} />
       <Route path="/post" element={<Post />} />
       <Route path="/test" element={<Test />} />
       <Route path="/prompt/:id" element={<Prompt />} />

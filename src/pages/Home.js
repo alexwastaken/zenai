@@ -6,6 +6,7 @@ import Header from '../components/header.js'
 import { Link } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import Sidebar from '../components/sidebar.js'
+import Grid from '../components/grid.js'
 
 
 
@@ -33,8 +34,9 @@ function Home() {
     //   style={{ backgroundImage: `url(${backgroundhome})` }}
     >
 
-    <Sidebar dataFromParent={data} />
-
+    <Sidebar />
+    <Grid dataFromParent={data} />
+    
     {/* <section className='mx-auto max-w-6xl'>
     <h1 className='text-center text-white text-3xl pt-20 pb-14'>All Books</h1>
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 gap-y-6 bottom-0 justify-items-center">
@@ -64,12 +66,6 @@ function Home() {
         </div>
     </section> */}
 
-    <footer className='fixed bottom-0 w-full flex flex-row gap-x-24 justify-center h-[50px] text-gray-200 opacity-30'>
-        <div>FAQ</div>
-        <div>Contact</div>
-        <div>Terms Of Service</div>
-        <div>© 2023</div>
-    </footer>
     </div>
   )
 }
