@@ -1,10 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { SquareLoader } from 'react-spinners';
 
 function grid(props) {
 
   if (!props.dataFromParent || props.dataFromParent.length === 0) {
-    return <div>Loading...</div>;
+    return (
+    <div className='bg-black h-screen'>
+        <div className='flex justify-center'>
+            <SquareLoader color="#fff" className='md:mt-96 sm:ml-64' />
+        </div>
+    </div>
+    )
   }
   
   return (
