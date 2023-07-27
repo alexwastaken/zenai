@@ -18,7 +18,7 @@ function Prompt() {
   return (
 
     <div
-      className="bg-black"
+      className="bg-gray-900"
     >
         <Sidebar />
         <Product dataFromParent={data} />

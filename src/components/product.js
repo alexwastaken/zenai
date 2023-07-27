@@ -8,9 +8,9 @@ function product(props) {
     if (!props.dataFromParent) {
         // Data is not yet available, render a loading message
         return <div>
-            <div className='bg-black h-screen'>
+            <div className='bg-gray-900 h-screen'>
                 <div className='flex justify-center'>
-                    <SquareLoader color="#fff" className='md:mt-96 sm:ml-64' />
+                    <SquareLoader color="#2d3748" className='md:mt-96 sm:ml-64' />
                 </div>
             </div>
         </div>;
