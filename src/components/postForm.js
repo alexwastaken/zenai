@@ -1,19 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 
-function postform() {
+function Postform() {
+
+    const [showMore, setShowMore] = useState(true);
+
+    const handleButtonClick = () => {
+      setShowMore((prevShowMore) => !prevShowMore);
+    };
+
   return (
+    
     <div className='sm:ml-64'>
-        <div class='flex flex-col max-w-3xl mx-auto bg-gray-900'>
-            <form className='mt-24'>
+        {showMore ? (
+        <div class='flex flex-col max-w-sm lg:max-w-3xl mx-auto bg-gray-900'>
+            <form className='mt-32'>
 
                 <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
                 <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Short intro" required></input>
 
-                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-16">Description</label>
+                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-12">Description</label>
                 <textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tell us about your pictures"></textarea>
 
-                <div class="grid grid-cols-5 gap-4 mt-16">
+                <div class="grid grid-cols-4 gap-4 mt-16">
                     <div>
                         <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt=""></img>
                     </div>
@@ -26,9 +35,7 @@ function postform() {
                     <div>
                         <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg" alt=""></img>
                     </div>
-                    <div>
-                        <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg" alt=""></img>
-                    </div>
+
                 </div>
 
                 <div class="flex items-center justify-center mt-10">
@@ -43,31 +50,32 @@ function postform() {
                         <input id="dropzone-file" type="file" class="hidden" />
                     </label>
                 </div>
-
-                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                <CurrencyInput
-                    id="input-example"
-                    name="input-name"
-                    placeholder="Maximum 99$"
-                    defaultValue={1000}
-                    prefix='$ '
-                    maxLength={2}
-                    onValueChange={(value, name) => console.log(value, name)}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />;
-
-
-                <div class="flex items-start mb-6">
-                    <div class="flex items-center h-5">
-                    <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required />
-                    </div>
-                    <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
-                </div>
-
+                
             </form>
+
+
+            <button type="button" onClick={handleButtonClick} class="text-white
+             bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300
+              font-medium rounded-lg text-sm px-5 py-2.5 mt-10 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700
+               dark:focus:ring-gray-700 dark:border-gray-700 w-24 mx-auto">Next</button>
         </div>
+        ) :
+        <div className='text-4xl text-white ml-64'>
+            
+            <CurrencyInput
+                id="input-example"
+                name="input-name"
+                placeholder="Please enter a number"
+                defaultValue={1000}
+                decimalsLimit={2}
+                onValueChange={(value, name) => console.log(value, name)}
+                className="mt-64 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+
+            <button type="button" onClick={handleButtonClick} class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">{showMore ? ( 'Next') : ( 'Back' )}</button>
+        </div>}
     </div>
   )
 }
 
-export default postform
+export default Postform

@@ -28,7 +28,6 @@ function Home() {
       console.log(data, 'this is appear')
   return (
     <div
-      className="bg-gray-900"
     //   style={{ backgroundImage: `url(${backgroundhome})` }}
     >
 
