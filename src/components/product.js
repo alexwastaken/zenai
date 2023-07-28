@@ -31,7 +31,7 @@ function product(props) {
         
                         <div class="grid gap-4 max-w-md float-right mt-44">
                             <div>
-                                <img class="h-auto max-w-full rounded-lg" src={props.dataFromParent.imageFile} alt=""></img>
+                                <img class="h-auto max-w-full rounded-lg" src={props.dataFromParent.imageFile[0]} alt=""></img>
                             </div>
                             <div class="grid grid-cols-5 gap-4">
                                 <div>

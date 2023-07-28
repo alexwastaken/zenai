@@ -36,7 +36,7 @@ function Post() {
   const handleImageChange = async (event) => {
     if (event.target.files) {
       const newImages = [...image];
-      newImages.push(event.target.files[0]);
+      newImages.push(URL.createObjectURL(event.target.files[0]));
       setImage(newImages);
       
       const resized = await resizeFile(event.target.files[0]);
@@ -50,7 +50,7 @@ function Post() {
         className="bg-gray-900 h-screen"
       >
         <Sidebar />
-        <PostForm />
+        <PostForm userInfo={user} />
         {/* <div className='ml-64 mt-14'>
           <section className='mx-auto max-w-3xl'>
             <div className='flex flex-col md:space-x-8 md:flex-row'>
