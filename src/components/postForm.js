@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Resizer from "react-image-file-resizer";
 import CurrencyInput from 'react-currency-input-field';
 
@@ -14,6 +14,14 @@ function Postform(props) {
   const [image, setImage] = useState([]);
   const [binary, setBinary] = useState([]);
   const [submitForm, setSubmitForm] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  const [LargeImage, setLargeImage] = useState(false);
+  const [ManyImages, setManyImages] = useState(false);
+
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
 
   const handleButtonClick = () => {
     setShowMore((prevShowMore) => !prevShowMore);
@@ -37,7 +45,22 @@ function Postform(props) {
   });
 
   const handleImageChange = async (event) => {
-    if (event.target.files) {
+    if (event.target.files && event.target.files.length > 0) {
+
+      if (event.target.files[0].size > 2097152) {
+        setLargeImage(true)
+        return;
+      } else {
+        setLargeImage(false)
+      }
+
+      if (image.length >= 4) {
+        setManyImages(true)
+        return;
+      } else{
+        setManyImages(false)
+      }
+
       const newImages = [...image];
       newImages.push(URL.createObjectURL(event.target.files[0]));
       setImage(newImages);
@@ -49,16 +72,16 @@ function Postform(props) {
 
   const handleFormSubmit = () => {
     if (!title) {
-      alert('Title is required');
-      return;
+        setSubmitForm(true)
+        return;
     }
     if (!desc) {
-      alert('Description is required');
-      return;
+        setSubmitForm(true)
+        return;
     }
     if (!price) {
-      alert('Price is required');
-      return;
+        setSubmitForm(true)
+        return;
     }
     if(binary.length === 0){
         setSubmitForm(true)
@@ -88,6 +111,27 @@ function Postform(props) {
       });
   };
 
+  useEffect(() => {
+    // Access the 'my-alert' element inside useEffect
+    const myAlert = document.getElementById('my-alert');
+
+    // Fade in
+    if (LargeImage || ManyImages) {
+      myAlert.classList.remove('opacity-0');
+      myAlert.classList.add('opacity-100');
+    }
+
+    // Fade out after a delay
+    setTimeout(() => {
+      myAlert.classList.remove('opacity-100');
+      myAlert.classList.add('opacity-0');
+    }, 2000);
+
+    setLargeImage(false)
+    setManyImages(false)
+    
+  }, [LargeImage, ManyImages]);
+
   return (
     <div className='sm:ml-64'>
       <div className='flex flex-col max-w-sm lg:max-w-3xl mx-auto bg-gray-900'>
@@ -115,6 +159,20 @@ function Postform(props) {
               placeholder='Tell us about your pictures'
               onChange={e => setDesc(e.target.value)}
             ></textarea>
+
+            <div id="my-alert" class={`flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 transition-opacity duration-500 ease-in-out fixed bottom-0 ${(!LargeImage && !ManyImages) ? 'opacity-0' : 'opacity-100'}`} role="alert">
+                <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div>
+                    <span class="font-medium">Items Missing! </span>
+                    {ManyImages && LargeImage && 'Oops! You can only upload up to four images, and each image should be under two megabytes.'}
+                    {ManyImages && 'Oops! You can only upload up to four images to showcase your items.'}
+                    {LargeImage && 'Oh no! The image you selected is too large. Please ensure each image is under two megabytes.'}
+                </div>
+            </div>
+
 
             <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 mt-16'>
               <div>
@@ -158,7 +216,7 @@ function Postform(props) {
 
               </div>
             </div>
-
+            
             <div className='flex items-center justify-center mt-10'>
               <label
                 htmlFor='image-input'
@@ -201,17 +259,28 @@ function Postform(props) {
             
           <div className='text-4xl text-white'>
 
-            <div class={`flex items-center p-4 mb-4 mt-44 text-sm text-red-800 border border-red-300 rounded-lg ease-in bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 ${!submitForm && 'invisible'}`} role="alert">
+            <div class={`flex items-center p-4 mb-4 mt-44 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 ${!submitForm || (title && desc && price && binary.length > 0 && isChecked && prompt) ? 'invisible' : ''}`} role="alert">
                 <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                 </svg>
                 <span class="sr-only">Info</span>
                 <div>
-                <span class="font-medium">Items Missing!</span> Change a few things up and try submitting again.
+                <span class="font-medium">Items Missing! </span>
+                {!title && 'Title'}
+                {!title && (!desc || !price || binary.length === 0 || !isChecked || !prompt) && ', '}
+                {!desc && 'Description'}
+                {!desc && (!price || binary.length === 0 || !isChecked || !prompt) && ', '}
+                {!price && 'Price'}
+                {!price && (binary.length === 0 || !isChecked || !prompt) && ', '}
+                {binary.length === 0 && 'Image'}
+                {binary.length === 0 && (!isChecked || !prompt) && ', '}
+                {!isChecked && 'Terms and conditions'}
+                {!isChecked && !prompt && ', '}
+                {!prompt && 'Prompt'}
                 </div>
             </div>
 
-            <label htmlFor='message' className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+            <label htmlFor='message' className='block mb-2 text-sm font-medium text-gray-900 dark:text-white '>
               Price
             </label>
             <CurrencyInput
@@ -237,12 +306,12 @@ function Postform(props) {
             ></textarea>
 
             <div class="flex items-start mb-6 mt-10">
-                    <div class="flex items-center h-5">
-                    <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300
-                     dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer" required />
-                    </div>
-                    <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
+                <div class="flex items-center h-5">
+                <input id="remember" type="checkbox" checked={isChecked} onChange={handleCheckboxChange} value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300
+                    dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer" required />
                 </div>
+                <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
+            </div>
                 
 
             
