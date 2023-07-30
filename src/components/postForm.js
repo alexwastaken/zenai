@@ -16,8 +16,11 @@ function Postform(props) {
   const [submitForm, setSubmitForm] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [LargeImage, setLargeImage] = useState(false);
+  const [BothAre, setBothAre] = useState(false);
   const [ManyImages, setManyImages] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [duplicateImage, setDuplicateImage] = useState(false);
+  const [duplicateImageStorage, setDuplicateImageStorage] = useState([]);
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
@@ -46,25 +49,45 @@ function Postform(props) {
   });
 
   const handleImageChange = async (event) => {
+
     if (event.target.files && event.target.files.length > 0) {
 
+        console.log(event.target.value, 'this is the value')
+        console.log(event.target.files[0], 'here it is')
+        console.log(duplicateImageStorage, 'this is the storage')
 
-      setLargeImage(false)
-      setManyImages(false)
-      
-      if (event.target.files[0].size > 2097152) {
+    setLargeImage(false)
+    setManyImages(false)
+    setDuplicateImage(false)
+    setBothAre(false)
+
+    if (duplicateImageStorage.includes(event.target.value)) {
+        setDuplicateImage(true)
+        ring()
+        const zom = [...duplicateImageStorage];
+        const index = zom.indexOf(event.target.value);
+        if (index !== -1) {
+            zom.splice(index, 1);
+            setDuplicateImageStorage(zom);
+        }
+        return;
+    } else {
+    }
+
+
+    if (event.target.files[0].size > 2097152 && image.length >= 4) {
+        setBothAre(true)
+        ring()
+        return;
+    } else if (event.target.files[0].size > 2097152) {
         setLargeImage(true)
         ring()
         return;
-      } else {
-      }
-
-      if (image.length >= 4) {
+    } else if (image.length >= 4) {
         setManyImages(true)
         ring()
         return;
-      } else{
-      }
+    }
 
       const newImages = [...image];
       newImages.push(URL.createObjectURL(event.target.files[0]));
@@ -72,21 +95,38 @@ function Postform(props) {
       
       const resized = await resizeFile(event.target.files[0]);
       setBinary((prevBinary) => [...prevBinary, resized]);
+
+      const zom = [...duplicateImageStorage];
+        zom.push(event.target.value);
+        setDuplicateImageStorage(zom);
+
     }
+    event.target.value = null;
   };
 
-  function ring() {
-    setShowAlert(true)
+    let lastCalled = 0;
 
-    setTimeout(() => {
-        setShowAlert(false)
-        
-      }, 3000);
+    function ring() {
+        const now = Date.now();
+        if (now - lastCalled < 3000) {
+            return;
+        }
+        lastCalled = now;
+        setShowAlert(true)
 
-  }
+        setTimeout(() => {
+            setShowAlert(false)
+        }, 3000);
+    }
 
     function deleteImage(index) {
         setImage(prevItems => prevItems.filter((item, i) => i !== index));
+        setBinary(prevItems => prevItems.filter((item, i) => i !== index));
+        const zom = [...duplicateImageStorage];
+        zom.pop();
+        setDuplicateImageStorage(zom);
+        // i need to make it so the instance of the duplicated image in the storage is deleted, and also there is multiple lines in the alert for some reason
+        
     }
 
   const handleFormSubmit = () => {
@@ -130,6 +170,15 @@ function Postform(props) {
       });
   };
 
+  const handleUpdatePrice = (inputValue) => {
+    const parsedNumber = parseFloat(inputValue.replace(/[^\d.]/g, ''));
+    if (!isNaN(parsedNumber)) {
+      const firstTwoDigits = parsedNumber.toString().slice(0, 2);
+      setPrice(firstTwoDigits);
+    } else {
+      setPrice(null);
+    }
+  };
 
   return (
     <div className='sm:ml-64'>
@@ -145,6 +194,7 @@ function Postform(props) {
               className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
               placeholder='Short intro'
               onChange={e => setTitle(e.target.value)}
+              value={title}
               required
             />
 
@@ -155,20 +205,22 @@ function Postform(props) {
               id='message'
               rows='4'
               className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-              placeholder='Tell us about your pictures'
+              placeholder='Tell us more'
               onChange={e => setDesc(e.target.value)}
+              value={desc}
             ></textarea>
             
-            <div id="my-alert" class={`flex items-center max-w-sm lg:max-w-3xl mx-auto w-full fixed bottom-0 p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 transition-opacity duration-500 ease-in-out ${showAlert ? 'opacity-100': 'opacity-0'}`} role="alert">
+            <div id="my-alert" class={`flex items-center pointer-events-none max-w-sm lg:max-w-3xl mx-auto w-full fixed bottom-0 p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 transition-opacity duration-500 ease-in-out ${showAlert ? 'opacity-100': 'opacity-0'}`} role="alert">
                 <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                 </svg>
                 <span class="sr-only">Info</span>
                 <div>
                     <span class="font-medium">Items Missing! </span>
-                    {ManyImages && LargeImage && 'Oops! You can only upload up to four images, and each image should be under 2MB.'}
+                    {BothAre && 'Oops! You can only upload up to four images, and each image should be under 2MB.'}
                     {ManyImages && 'Oops! You can only upload up to four images.'}
                     {LargeImage && 'Oh no! The image you selected is too large. Please ensure each image is under two megabytes.'}
+                    {duplicateImage && "Sorry! You can't upload the same image twice."}
                 </div>
             </div>
 
@@ -264,7 +316,7 @@ function Postform(props) {
                   <p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
                     <span className='font-semibold'>Click to upload</span> or drag and drop
                   </p>
-                  <p className='text-xs text-gray-500 dark:text-gray-400'>SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                  <p className='text-xs text-gray-500 dark:text-gray-400'>PNG, JPG or GIF (MAX 2MB)</p>
                 </div>
                 <input
                     type='file'
@@ -307,15 +359,16 @@ function Postform(props) {
               Price
             </label>
             <CurrencyInput
-              id='input-example'
-              name='input-name'
-              placeholder='Max 99$'
-              defaultValue={1000}
-              prefix='$ '
-              maxLength={2}
-              onChange={e => setPrice(e.target.value)}
-              className=' bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-            />
+                id='input-example'
+                name='input-name'
+                placeholder='Max 99$'
+                prefix='$ '
+                maxLength={2} // Assuming you want to allow up to 5 characters (including the "$" and two digits).
+                onChange={(e) => handleUpdatePrice(e.target.value)} // Pass the event object to the function.
+                value={price}
+                className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                />
+
 
             <label htmlFor='message' className='block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-12'>
               Prompt
@@ -326,6 +379,7 @@ function Postform(props) {
               className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
               placeholder='Enter your Prompt'
               onChange={e => setPrompt(e.target.value)}
+              value={prompt}
             ></textarea>
 
             <div class="flex items-start mb-6 mt-10">
