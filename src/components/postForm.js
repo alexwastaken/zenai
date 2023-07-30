@@ -17,6 +17,7 @@ function Postform(props) {
   const [isChecked, setIsChecked] = useState(false);
   const [LargeImage, setLargeImage] = useState(false);
   const [ManyImages, setManyImages] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
@@ -47,18 +48,22 @@ function Postform(props) {
   const handleImageChange = async (event) => {
     if (event.target.files && event.target.files.length > 0) {
 
+
+      setLargeImage(false)
+      setManyImages(false)
+      
       if (event.target.files[0].size > 2097152) {
         setLargeImage(true)
+        ring()
         return;
       } else {
-        setLargeImage(false)
       }
 
       if (image.length >= 4) {
         setManyImages(true)
+        ring()
         return;
       } else{
-        setManyImages(false)
       }
 
       const newImages = [...image];
@@ -69,6 +74,20 @@ function Postform(props) {
       setBinary((prevBinary) => [...prevBinary, resized]);
     }
   };
+
+  function ring() {
+    setShowAlert(true)
+
+    setTimeout(() => {
+        setShowAlert(false)
+        
+      }, 3000);
+
+  }
+
+    function deleteImage(index) {
+        setImage(prevItems => prevItems.filter((item, i) => i !== index));
+    }
 
   const handleFormSubmit = () => {
     if (!title) {
@@ -111,26 +130,6 @@ function Postform(props) {
       });
   };
 
-  useEffect(() => {
-    // Access the 'my-alert' element inside useEffect
-    const myAlert = document.getElementById('my-alert');
-
-    // Fade in
-    if (LargeImage || ManyImages) {
-      myAlert.classList.remove('opacity-0');
-      myAlert.classList.add('opacity-100');
-    }
-
-    // Fade out after a delay
-    setTimeout(() => {
-      myAlert.classList.remove('opacity-100');
-      myAlert.classList.add('opacity-0');
-    }, 2000);
-
-    setLargeImage(false)
-    setManyImages(false)
-    
-  }, [LargeImage, ManyImages]);
 
   return (
     <div className='sm:ml-64'>
@@ -159,16 +158,16 @@ function Postform(props) {
               placeholder='Tell us about your pictures'
               onChange={e => setDesc(e.target.value)}
             ></textarea>
-
-            <div id="my-alert" class={`flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 transition-opacity duration-500 ease-in-out fixed bottom-0 ${(!LargeImage && !ManyImages) ? 'opacity-0' : 'opacity-100'}`} role="alert">
+            
+            <div id="my-alert" class={`flex items-center max-w-sm lg:max-w-3xl mx-auto w-full fixed bottom-0 p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800 transition-opacity duration-500 ease-in-out ${showAlert ? 'opacity-100': 'opacity-0'}`} role="alert">
                 <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                 </svg>
                 <span class="sr-only">Info</span>
                 <div>
                     <span class="font-medium">Items Missing! </span>
-                    {ManyImages && LargeImage && 'Oops! You can only upload up to four images, and each image should be under two megabytes.'}
-                    {ManyImages && 'Oops! You can only upload up to four images to showcase your items.'}
+                    {ManyImages && LargeImage && 'Oops! You can only upload up to four images, and each image should be under 2MB.'}
+                    {ManyImages && 'Oops! You can only upload up to four images.'}
                     {LargeImage && 'Oh no! The image you selected is too large. Please ensure each image is under two megabytes.'}
                 </div>
             </div>
@@ -176,7 +175,15 @@ function Postform(props) {
 
             <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 mt-16'>
               <div>
-              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 opacity-30'>
+              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 flex items-center relative'>
+              {image[0] ? (
+                <div onClick={() => deleteImage(0)} className='rounded-full absolute bg-gray-700 w-7 h-7 top-[-10px] right-[-10px] flex items-center justify-center opacity-70'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cursor-pointer w-5 h-10 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+              ) : ( '' )}
+
               <img
                 className='max-w-[180px] max-h-[139px] mx-auto'
                 src={image[0]}
@@ -186,7 +193,16 @@ function Postform(props) {
 
               </div>
               <div>
-              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 opacity-30'>
+              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 flex items-center relative'>
+
+              {image[1] ? (
+                <div onClick={() => deleteImage(1)} className='rounded-full absolute bg-gray-700 w-7 h-7 top-[-10px] right-[-10px] flex items-center justify-center opacity-70'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cursor-pointer w-5 h-10 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+              ) : ( '' )}
+
               <img
                 className='max-w-[180px] max-h-[139px] mx-auto'
                 src={image[1]}
@@ -196,7 +212,16 @@ function Postform(props) {
 
               </div>
               <div>
-              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 opacity-30'>
+              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 flex items-center relative'>
+
+              {image[2] ? (
+                <div onClick={() => deleteImage(2)} className='rounded-full absolute bg-gray-700 w-7 h-7 top-[-10px] right-[-10px] flex items-center justify-center opacity-70'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cursor-pointer w-5 h-10 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+              ) : ( '' )}
+
               <img
                 className='max-w-[180px] max-h-[139px] mx-auto'
                 src={image[2]}
@@ -206,7 +231,16 @@ function Postform(props) {
 
               </div>
               <div>
-              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 opacity-30'>
+              <div className='w-[180px] h-[139px] mx-auto rounded-lg bg-gray-800 flex items-center relative'>
+
+              {image[3] ? (
+                <div  onClick={() => deleteImage(3)} className='rounded-full absolute bg-gray-700 w-7 h-7 top-[-10px] right-[-10px] flex items-center justify-center opacity-70'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cursor-pointer w-5 h-10 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+              ) : ( '' )}
+
               <img
                 className='max-w-[180px] max-h-[139px] mx-auto'
                 src={image[3]}
@@ -223,21 +257,10 @@ function Postform(props) {
                 className='flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
               >
                 <div className='flex flex-col items-center justify-center pt-5 pb-6'>
-                  <svg
-                    className='w-8 h-8 mb-4 text-gray-500 dark:text-gray-400'
-                    aria-hidden='true'
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 20 16'
-                  >
-                    <path
-                      stroke='currentColor'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth='2'
-                      d='M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2'
-                    />
-                  </svg>
+                <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                </svg>
+
                   <p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
                     <span className='font-semibold'>Click to upload</span> or drag and drop
                   </p>
