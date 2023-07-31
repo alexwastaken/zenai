@@ -16,15 +16,19 @@ app.use(express.json())
 app.use(cors())
 
 app.post('/mypost', async (req, res) => {
-  // Get data from request body
-  const { title, description, userId, imageFile } = req.body
 
-  // Create new user in database
+  const { title, desc, price, prompt, userId, imageFile, isChecked } = req.body
+
+  console.log(req.body, 'd1k1d')
+
   try {
     const newUser = await prisma.user.create({
       data: {
         title,
-        description,
+        desc,
+        price,
+        prompt,
+        isChecked,
         userId,
         imageFile
       },
@@ -38,6 +42,35 @@ app.post('/mypost', async (req, res) => {
   }
 })
 
+
+app.post('/mypost', async (req, res) => {
+
+  const { title, desc, price, prompt, userId, imageFile, isChecked } = req.body
+
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        title,
+        desc,
+        price,
+        prompt,
+        isChecked,
+        userId,
+        imageFile
+      },
+    })
+
+    // Send response with new user data
+    res.status(201).json(newUser)
+  } catch (error) {
+    // Handle error
+    res.status(500).json({ error: error.message })
+  }
+})
+
+
+
+
 app.get('/users', async (req, res) => {
   try {
     const users = await prisma.user.findMany({
@@ -48,7 +81,10 @@ app.get('/users', async (req, res) => {
       select: {
         id: true,
         title: true,
-        description: true,
+        desc: true,
+        price: true,
+        prompt: true,
+        isChecked: true,
         userId: true,
         imageFile: true
       },
@@ -68,7 +104,7 @@ app.get('/promptID/:id', async (req, res) => {
       select: {
         id: true,
         title: true,
-        description: true,
+        desc: true,
         userId: true,
         imageFile: true
       },

@@ -10,7 +10,10 @@ generator client {
 model User {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String?
-  description String?
+  desc        String?
+  price       String?
+  prompt      String?
+  isChecked   Boolean    @default(false)
   userId      String?
   imageFile   String[]
 }

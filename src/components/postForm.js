@@ -21,7 +21,7 @@ function Postform(props) {
   const [showAlert, setShowAlert] = useState(false);
   const [duplicateImage, setDuplicateImage] = useState(false);
   const [duplicateImageStorage, setDuplicateImageStorage] = useState([]);
-
+  
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -50,11 +50,11 @@ function Postform(props) {
 
   const handleImageChange = async (event) => {
 
-    if (event.target.files && event.target.files.length > 0) {
+    if(showAlert) {
+        return
+    }
 
-        console.log(event.target.value, 'this is the value')
-        console.log(event.target.files[0], 'here it is')
-        console.log(duplicateImageStorage, 'this is the storage')
+    if (event.target.files && event.target.files.length > 0) {
 
     setLargeImage(false)
     setManyImages(false)
@@ -64,29 +64,30 @@ function Postform(props) {
     if (duplicateImageStorage.includes(event.target.value)) {
         setDuplicateImage(true)
         ring()
-        const zom = [...duplicateImageStorage];
-        const index = zom.indexOf(event.target.value);
-        if (index !== -1) {
-            zom.splice(index, 1);
-            setDuplicateImageStorage(zom);
-        }
         return;
     } else {
+
     }
 
 
     if (event.target.files[0].size > 2097152 && image.length >= 4) {
+        
         setBothAre(true)
         ring()
         return;
+
     } else if (event.target.files[0].size > 2097152) {
+
         setLargeImage(true)
         ring()
         return;
+
     } else if (image.length >= 4) {
+
         setManyImages(true)
         ring()
         return;
+
     }
 
       const newImages = [...image];
@@ -156,6 +157,8 @@ function Postform(props) {
         title,
         desc,
         price,
+        prompt,
+        isChecked,
         userId: user.name,
         imageFile: binary
       })
@@ -166,7 +169,7 @@ function Postform(props) {
         }
       })
       .catch(error => {
-        // Handle error
+        console.log(error, 'this is the error')
       });
   };
 
@@ -314,7 +317,7 @@ function Postform(props) {
                 </svg>
 
                   <p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-                    <span className='font-semibold'>Click to upload</span> or drag and drop
+                    <span className='font-semibold'>Click to upload</span>
                   </p>
                   <p className='text-xs text-gray-500 dark:text-gray-400'>PNG, JPG or GIF (MAX 2MB)</p>
                 </div>
@@ -324,7 +327,6 @@ function Postform(props) {
                     onChange={handleImageChange}
                     className='hidden'
                     id='image-input'
-                    multiple
                 />
               </label>
             </div>

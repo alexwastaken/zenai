@@ -19,7 +19,6 @@ function Home() {
         fetch('http://localhost:3001/users')
           .then((response) => response.json())
           .then((data) => {
-            console.log(data, 'd211d');
             setData(data);
           })
           .catch((error) => console.error('An error occurred:', error));
@@ -27,9 +26,7 @@ function Home() {
       
       console.log(data, 'this is appear')
   return (
-    <div
-    //   style={{ backgroundImage: `url(${backgroundhome})` }}
-    >
+    <div>
 
     <Sidebar />
     <Grid dataFromParent={data} />
