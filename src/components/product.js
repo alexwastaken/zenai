@@ -1,9 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SquareLoader } from 'react-spinners'
 
-function product(props) {
+function Product(props) {
 
-    console.log(props)
+    const [arrayImage, setArrayImage] = useState([0,1,2,3])
+
+    const handleImageChange = (event) => {
+
+        console.log(event, 'this is the position of the item in the array')
+        console.log(arrayImage, 'this is the array')
+
+        let newArray = [...arrayImage];
+
+        // Swap the first image with the clicked image
+        let temp = newArray[0];
+        newArray[0] = newArray[event];
+        newArray[event] = temp;
+
+        setArrayImage(newArray);
+        
+    }
+
     
 
     
@@ -21,12 +38,13 @@ function product(props) {
         return (
             <div className='sm:ml-64'>
                 <section className='mx-auto max-w-5xl h-screen'>
-                        
-                    <div class="flex flex-col lg:flex-row lg:justify-between items-center">
-                    <div class="mt-44 text-white w-96">
+
+                    <div class="flex flex-col lg:flex-row lg:justify-between">
+                    
+                    <div class="mt-[265px] text-white w-[450px]">
                         <h2 className='text-4xl'>{props.dataFromParent.title}</h2>
-                        <p className='text-sm mt-4 '>{props.dataFromParent.userId}</p>
-                        <p className='text-xl mt-10 break-words pb-4 border-b border-gray-200'>
+                        <p className='mt-4 to-cyan-100'>{props.dataFromParent.userId}</p>
+                        <p className='text-lg mt-10 break-words pb-8 border-b border-gray-700'>
                         {props.dataFromParent.desc}
                         </p>
                         
@@ -56,19 +74,19 @@ function product(props) {
                     
             
             
-                            <div class="grid gap-4 max-w-md float-right mt-44 ">
+                            <div className="grid gap-4 max-w-sm float-right mt-44">
                                 <div>
-                                    <img class="h-auto max-w-full rounded-lg" src={props.dataFromParent.imageFile[0]} alt=""></img>
+                                    <img className="max-w-full max-h-full aspect-square rounded-lg cursor-pointer" onClick={() => handleImageChange(0)} src={props.dataFromParent.imageFile[arrayImage[0]]} alt=""></img>
                                 </div>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div className="grid grid-cols-3 gap-4">
                                     <div>
-                                        <img class="h-auto max-w-full rounded-lg" src={props.dataFromParent.imageFile[1]} alt=""></img>
+                                        <img className="h-auto max-w-full rounded-lg cursor-pointer" onClick={() => handleImageChange(1)} src={props.dataFromParent.imageFile[arrayImage[1]]} alt=""></img>
                                     </div>
                                     <div>
-                                        <img class="h-auto max-w-full rounded-lg" src={props.dataFromParent.imageFile[2]} alt=""></img>
+                                        <img className="h-auto max-w-full rounded-lg cursor-pointer" onClick={() => handleImageChange(2)} src={props.dataFromParent.imageFile[arrayImage[2]]} alt=""></img>
                                     </div>
                                     <div>
-                                        <img class="h-auto max-w-full rounded-lg" src={props.dataFromParent.imageFile[3]} alt=""></img>
+                                        <img className="h-auto max-w-full rounded-lg cursor-pointer" onClick={() => handleImageChange(3)} src={props.dataFromParent.imageFile[arrayImage[3]]} alt=""></img>
                                     </div>
                                 </div>
                             </div>
@@ -83,4 +101,4 @@ function product(props) {
     }
 }
 
-export default product
+export default Product
