@@ -7,9 +7,6 @@ function Product(props) {
 
     const handleImageChange = (event) => {
 
-        console.log(event, 'this is the position of the item in the array')
-        console.log(arrayImage, 'this is the array')
-
         let newArray = [...arrayImage];
 
         // Swap the first image with the clicked image

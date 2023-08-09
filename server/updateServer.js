@@ -73,6 +73,8 @@ app.post('/mypost', async (req, res) => {
 
 app.get('/users', async (req, res) => {
   try {
+
+    const count = await prisma.user.count();
     const users = await prisma.user.findMany({
       take: 18,
       orderBy: {
@@ -90,7 +92,8 @@ app.get('/users', async (req, res) => {
       },
     })
 
-    res.json(users)
+    res.json([users, count])
+
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -99,6 +102,7 @@ app.get('/users', async (req, res) => {
 app.get('/promptID/:id', async (req, res) => {
   try {
     const { id } = req.params; // Extract the user ID from the URL
+    
     const user = await prisma.user.findUnique({
       where: { id },
       select: {

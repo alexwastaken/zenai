@@ -10,12 +10,13 @@ import Grid from '../components/grid.js'
 
 function Home() {
 
-    const { isAuthenticated } = useAuth0()
+
+    
 
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        console.log('useEffect called');
+
         fetch('http://localhost:3001/users')
           .then((response) => response.json())
           .then((data) => {
@@ -24,7 +25,7 @@ function Home() {
           .catch((error) => console.error('An error occurred:', error));
       }, []);
       
-      console.log(data, 'this is appear')
+      
   return (
     <div>
 

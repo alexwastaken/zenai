@@ -12,6 +12,7 @@ function App() {
     <Routes>
       <Route path="/landing" element={<Landing />} />
       <Route path="/" element={<Home />} />
+      <Route path="/:grid" element={<Home />} />
       <Route path="/post" element={<Post />} />
       <Route path="/test" element={<Test />} />
       <Route path="/prompt/:id" element={<Prompt />} />
