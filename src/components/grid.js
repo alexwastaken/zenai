@@ -48,6 +48,8 @@ function Grid(props) {
     //     console.log('blehhh')
     // }
 
+    //coding tomorrow
+
 
     //this is not the solution i need to make it so the database grabs data based on the page that im on
 
