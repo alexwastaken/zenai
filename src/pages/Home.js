@@ -10,19 +10,18 @@ import Grid from '../components/grid.js'
 
 function Home() {
 
-
-    
-
     const [data, setData] = useState([]);
 
     useEffect(() => {
 
-        fetch('http://localhost:3001/users')
-          .then((response) => response.json())
-          .then((data) => {
-            setData(data);
-          })
-          .catch((error) => console.error('An error occurred:', error));
+      fetch(`http://localhost:3001/users?start=${startIndex}&end=${endIndex}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data, 'this is the dat')
+          setData(data);
+        })
+        .catch((error) => console.error('An error occurred:', error));
+
       }, []);
       
       

@@ -68,15 +68,15 @@ app.post('/mypost', async (req, res) => {
   }
 })
 
-
-
-
 app.get('/users', async (req, res) => {
   try {
+    const start = parseInt(req.query.start);
+    const end = parseInt(req.query.end);
 
     const count = await prisma.user.count();
     const users = await prisma.user.findMany({
-      take: 18,
+      skip: start,
+      take: end - start + 1,
       orderBy: {
         id: 'desc',
       },
@@ -93,7 +93,6 @@ app.get('/users', async (req, res) => {
     })
 
     res.json([users, count])
-
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
