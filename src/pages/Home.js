@@ -7,7 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import Sidebar from '../components/sidebar.js'
 import Grid from '../components/grid.js'
 
-
+adada
 function Home() {
 
     const [data, setData] = useState([]);
